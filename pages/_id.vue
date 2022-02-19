@@ -75,7 +75,7 @@ export default {
     const param = params.id
     try {
       let response = await $axios.$get(
-        `http://localhost:3000/api/v1/store/${param}`
+        `https://test-eshop-api.herokuapp.com/api/v1/store/${param}`
       )
       // console.log(response)
       // console.log(response[0].products)

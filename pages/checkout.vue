@@ -69,7 +69,7 @@ export default {
       const body = {
         phone: this.phone,
       }
-      const res = await axios.put('http://localhost:3000/api/v1/users', body)
+      const res = await axios.put('https://test-eshop-api.herokuapp.com/api/v1/users', body)
       console.log(res.data)
       // console.log(this.cart)
       // console.log(this.store);
@@ -107,7 +107,7 @@ export default {
           total: this.total,
         }
         console.log(body)
-        await axios.post('http://localhost:3000/api/v1/orders', body)
+        await axios.post('https://test-eshop-api.herokuapp.com/api/v1/orders', body)
 
         this.clearCartData()
         this.$router.push('/purchase')
