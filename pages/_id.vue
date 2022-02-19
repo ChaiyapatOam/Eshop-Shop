@@ -1,0 +1,130 @@
+<template>
+  <div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container px-4 px-lg-3">
+        <a class="navbar-brand" href="#"> {{this.$route.params.id}}</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        </div>
+      </div>
+     <CartSummary />
+    </nav>
+    <!-- Header-->
+    <header class="bg-dark py-3">
+      <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+          <h2 class="display-4 fw-bolder">ยินดีต้อนรับสู่ร้าน</h2>
+          <h1 class="display-4 fw-bolder">{{this.$route.params.id}}</h1>
+          <p class="lead fw-normal text-white-50 mb-0">
+           <!-- Text -->
+          </p>
+        </div>
+      </div>
+    </header>
+    <!-- Section-->
+    <!-- <section class="py-15"> -->
+      <div class="container px-4 px-lg-5 mt-5">
+        <div
+          class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
+        >
+        <!-- Product Card -->
+          <div class="col mb-5" v-for="(product, index) in products" :key="index">
+            <div class="card h-100">
+              <!-- Product image-->
+              <img
+                class="card-img-top"
+                :src="product.image"
+                alt="..."
+              />
+              <!-- Product details-->
+              <div class="card-body">
+                <div class="text-center">
+                  <!-- Product name-->
+                  <h5 class="fw-bolder">{{product.name}}</h5>
+                  <!-- Product price-->
+                  <h6>ราคา {{product.price}} บาท</h6>
+                   
+                </div>
+              </div>
+              <!-- Product actions-->
+              <div class=" text-center" style="margin-bottom: 20px;">
+                <button class="btn btn-primary" @click="AddProduct(product)">
+                  เพิ่มลงตะกร้า
+                </button>
+                <button class="btn btn-success" @click="Buynow(product)">
+                  ซื้อเลย
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- </section> -->
+  </div>
+</template>
+
+<script>
+import Header from '../components/Header.vue'
+import { mapState, mapActions, mapMutations } from 'vuex'
+
+export default {
+   head: {
+    // title: this.$route.params.id
+  },
+  async asyncData({ $axios, params }) {
+    const param = params.id
+    try {
+      let response = await $axios.$get(
+        `http://localhost:3000/api/v1/store/${param}`
+      )
+      // console.log(response)
+      // console.log(response[0].products)
+      return {
+        param: param,
+        products: response[0].products,
+      }
+    } catch (err) {}
+  },
+  component: {
+    Header,
+  },
+  methods: {
+    // ...mapActions({ initializeCart: "cart/initializeCart"}),
+    ...mapActions({
+      clearCartData: 'cart/clearCartData',
+      clearStore: 'cart/clearStore',
+      saveStore: 'cart/saveStore',
+    }),
+    ...mapMutations({
+      addProduct: 'cart/addProduct',
+    }),
+    AddProduct(product) {
+      this.addProduct(product)
+    },
+    Buynow(product) {
+      this.addProduct(product)
+      this.$router.push('/cart')
+    },
+  },
+  computed: {
+    ...mapState({
+      store: (state) => state.cart.store,
+    }),
+  },
+  async mounted() {
+    await this.clearStore()
+    await this.clearCartData()
+    this.saveStore(this.$route.params.id)
+  },
+}
+</script>
+
+<style scoped>
+.ratio {
+  aspect-ratio: auto 4 / 3;
+
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+}
+</style>
