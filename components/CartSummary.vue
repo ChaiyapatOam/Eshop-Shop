@@ -1,9 +1,13 @@
 <template>
   <div class="float-right text-black">
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
     <!-- <a href="/cart"   class="text-white">   -->
     <div class="row text-black">
       <a href="/cart">
-        <fa icon="shopping-cart" style="font-size: 24px"></fa>
+        <i class="bx bx-cart" style="font-size: 30px"></i>
       </a>
     </div>
     <!--<a href="/cart">  

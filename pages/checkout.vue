@@ -42,6 +42,11 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import axios from 'axios'
 export default {
+      head() {
+      return {
+        title: "CheckOut",
+      }
+    },
   components: {},
   data() {
     return {

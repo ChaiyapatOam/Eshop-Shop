@@ -36,6 +36,7 @@
                 :src="product.image"
                 alt="..."
               />
+
               <!-- Product details-->
               <div class="card-body">
                 <div class="text-center">
@@ -52,7 +53,7 @@
                   เพิ่มลงตะกร้า
                 </button>
                 <button class="btn btn-success" @click="Buynow(product)">
-                  ซื้อเลย
+                  ซื้อเลย  
                 </button>
               </div>
             </div>
@@ -68,9 +69,11 @@ import Header from '../components/Header.vue'
 import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
-   head: {
-    // title: this.$route.params.id
-  },
+    head() {
+      return {
+        title: this.store,
+      }
+    },
   async asyncData({ $axios, params }) {
     const param = params.id
     try {
@@ -85,7 +88,7 @@ export default {
       }
     } catch (err) {}
   },
-  component: {
+  component: { 
     Header,
   },
   methods: {
@@ -113,7 +116,6 @@ export default {
   },
   async mounted() {
     await this.clearStore()
-    await this.clearCartData()
     this.saveStore(this.$route.params.id)
   },
 }
