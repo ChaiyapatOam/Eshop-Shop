@@ -29,7 +29,8 @@
           <td>{{ c.product.price }}</td>
           <td>
             <!-- ลบ -->
-            <i class='bx bx-minus' @click="handleSubtractProduct(c.product.id)" ></i>
+            <i class='bx bx-minus'  @click="handleSubtractProduct(c.product.id,c.quantity)"></i>
+            <!-- <i class='bx bx-minus' v-else ></i> -->
             {{ c.quantity }}
             <!-- บวก -->
             <i class='bx bx-plus' @click="handleAddProduct(c.product)"></i>
@@ -41,7 +42,7 @@
               class="btn small btn-danger mx-1"
               @click="handleRemoveProduct(c.product.id)"
             >
-              <fa icon="trash-can" />
+              <i class="bx bx-trash"></i>
             </button>
           </td>
         </tr>
@@ -99,8 +100,10 @@ export default {
     handleAddProduct(product) {
       this.addProduct(product)
     },
-    handleSubtractProduct(id) {
+    handleSubtractProduct(id,quantity) {
+      if(quantity>1){
       this.subtractProduct(id)
+      }
     },
     handleRemoveProduct(id) {
       this.removeProduct(id)

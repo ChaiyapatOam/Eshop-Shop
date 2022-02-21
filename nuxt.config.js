@@ -1,8 +1,8 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
-  target : "static",
-  generate : {
-    fallback: true
+  target: 'static',
+  generate: {
+    fallback: true,
   },
   head: {
     title: 'shop',
@@ -19,12 +19,14 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: "./plugins/localStorage.js", ssr: false},'./plugins/fontawesome.js'],
+  plugins: [
+    { src: './plugins/localStorage.js', ssr: false },
+    './plugins/fontawesome.js',
+    './plugins/Vuelidate.js',
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -32,11 +34,11 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: ['@nuxtjs/fontawesome'],
   fontawesome: {
-    component : 'fa',
+    component: 'fa',
     icons: {
-      solid : true,
-      brands: true
-    }
+      solid: true,
+      brands: true,
+    },
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -47,7 +49,6 @@ export default {
     '@nuxtjs/axios',
   ],
 
-
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
@@ -56,7 +57,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
-  server : {
-    port: "9000"
-  }
+  server: {
+    port: '9000',
+  },
 }

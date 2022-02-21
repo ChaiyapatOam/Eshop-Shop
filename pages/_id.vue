@@ -10,10 +10,11 @@
      <CartSummary />
     </nav>
     <!-- Header-->
-    <header class="bg-dark py-3">
+    <header class="bg-dark py-3" >
       <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-          <h2 class="display-4 fw-bolder">ยินดีต้อนรับสู่ร้าน</h2>
+          <h2 class="display-4 fw-bolder" v-if="products">ยินดีต้อนรับสู่ร้าน</h2>
+          <h2 class="display-4 fw-bolder" v-else>ขออภัยไม่พอร้านค้า หรือ ร้านค้าปิดอยู่</h2>
           <h1 class="display-4 fw-bolder">{{this.$route.params.id}}</h1>
           <p class="lead fw-normal text-white-50 mb-0">
            <!-- Text -->
@@ -78,7 +79,7 @@ export default {
     const param = params.id
     try {
       let response = await $axios.$get(
-        `https://test-eshop-api.herokuapp.com/api/v1/store/${param}`
+        `http://159.223.71.243/api/v1/store/${param}`
       )
       // console.log(response)
       // console.log(response[0].products)

@@ -1,25 +1,51 @@
 <template>
-  <div class="row">
+  <div class="row mt-3">
     <div class="col-12">
-      <div class="form-group m-2">
-        <label for="">ใส่เบอร์โทรศัพท์ของท่าน</label>
-        <input type="text" class="form-control" v-model="phone" />
-      </div>
-      <!-- <h1>{{ phone }}</h1>
-      <h1>{{name}}</h1> -->
-      <div class="form-group m-2" v-if="sw == true">
-        <label for="">ชื่อ</label>
-        <input type="text" class="form-control" v-model="name" />
-      </div>
-      <div class="form-group m-2" v-if="sw == true">
-        <label for="">ที่อยู่</label>
-        <input type="text" class="form-control" v-model="address" />
-      </div>
+      <form @submit.prevent="POST">
+        <div class="form-group m-2">
+          <label for="phone">ใส่เบอร์โทรศัพท์ของท่าน</label>
+          <input
+            type="text"
+            name="phone"
+            id="phone"
+            class="form-control"
+            v-model="phone"
+            :class="{ 'is-invalid': submitted && $v.phone.$error }"
+          />
+          <label v-if="!$v.phone.minLength" class="is-invalid">เบอร์โทรศัพท์ไม่ถูกต้อง</label>
+          <label v-if="!$v.phone.maxLength" class="is-invalid">เบอร์โทรศัพท์ไม่ถูกต้อง</label>
+        </div>
+
+        <div class="form-group m-2" v-if="sw == true">
+          <label for="name">ชื่อ</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            class="form-control"
+            v-model="name"
+            :class="{ 'is-invalid': submitted && $v.name.$error }"
+          />
+          <label v-if="!$v.name.required" class="text-red">โปรดใส่ชื่อ</label>
+        </div>
+        <div class="form-group m-2" v-if="sw == true">
+          <label for="address">ที่อยู่</label>
+          <input
+            type="text"
+            name="address"
+            id="address"
+            class="form-control"
+            v-model="address"
+            :class="{ 'is-invalid': submitted && $v.address.$error }"
+          />
+          <label v-if="!$v.address.required">โปรดใส่ทึ่อยู่</label>
+        </div>
+      </form>
     </div>
+
+    <!-- Button -->
     <div class="col-12 text-center">
-      <button class="btn btn-secondary m-1" @click="Back"
-        >ย้อนกลับ</button
-      >
+      <button class="btn btn-secondary m-1" @click="Back">ย้อนกลับ</button>
       <button
         v-if="this.sw == false"
         class="btn btn-primary m-1"
@@ -40,13 +66,14 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { required, minLength,maxLength } from 'vuelidate/lib/validators'
 import axios from 'axios'
 export default {
-      head() {
-      return {
-        title: "CheckOut",
-      }
-    },
+  head() {
+    return {
+      title: 'CheckOut',
+    }
+  },
   components: {},
   data() {
     return {
@@ -54,12 +81,18 @@ export default {
       name: '',
       address: '',
       sw: false,
+      submitted: false,
     }
+  },
+  validations: {
+    phone: { required, minLength: minLength(10),maxLength: maxLength(10) },
+    name: { required },
+    address: { required },
   },
   computed: {
     ...mapState({
       cart: (state) => state.cart.cart,
-      store: (state) => state.cart.store
+      store: (state) => state.cart.store,
     }),
     ...mapGetters({
       total: 'cart/totalPrice',
@@ -74,7 +107,10 @@ export default {
       const body = {
         phone: this.phone,
       }
-      const res = await axios.put('https://test-eshop-api.herokuapp.com/api/v1/users', body)
+      const res = await axios.put(
+        `http://159.223.71.243/api/v1/users`,
+        body
+      )
       console.log(res.data)
       // console.log(this.cart)
       // console.log(this.store);
@@ -83,37 +119,25 @@ export default {
         this.address = res.data.address
       }
       if (this.phone) this.sw = true
-      /*
-     if(this.sw == true && this.name !='' && this.address !=''){
-      const body ={
-         store: 'anime',
-         phone: this.phone,
-         address: this.address,
-         cart : JSON.stringify(this.cart)
-       }
-       console.log(body)
-       await axios.post('http://localhost:3000/api/v1/orders', body) */
-      //  const data = new FormData()
-      //  data.append('store', 'anime')
-      //  data.append('phone', this.phone)
-      //  data.append('address', this.address)
-      //  data.append("cart", JSON.stringify(this.cart))
-      //   console.log(data);
-      //  await axios.post('http://localhost:3000/api/v1/orders/add', data)
-      //  }
     },
-    async POST() {
-      if (this.sw == true && this.name != '' && this.address != '') {
-        const body = {
-          store: this.store,
-          phone: this.phone,
-          address: this.address,
-          cart: JSON.stringify(this.cart),
-          total: this.total,
-        }
-        console.log(body)
-        await axios.post('https://test-eshop-api.herokuapp.com/api/v1/orders', body)
+    async POST(e) {
+      this.submitted = true
 
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return
+      }
+      const body = {
+        store: this.store,
+        name: this.name,
+        phone: this.phone,
+        address: this.address,
+        cart: JSON.stringify(this.cart),
+        total: this.total,
+      }
+      console.log(body)
+      const res = await axios.post(`http://159.223.71.243/api/v1/orders`, body)
+      if (res.status == 200) {
         this.clearCartData()
         this.$router.push('/purchase')
       }
