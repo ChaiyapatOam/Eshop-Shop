@@ -136,7 +136,7 @@ export default {
         total: this.total,
       }
       console.log(body)
-      const res = await axios.post(`http://159.223.71.243/api/v1/orders`, body)
+      const res = await axios.post(`https://ai-ani.me/api/v1/orders`, body)
       if (res.status == 200) {
         this.clearCartData()
         this.$router.push('/purchase')
