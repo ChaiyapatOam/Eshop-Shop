@@ -79,7 +79,7 @@ export default {
     const param = params.id
     try {
       let response = await $axios.$get(
-        `http://159.223.71.243/api/v1/store/${param}`
+        `https://ai-ani.me/api/v1/store/${param}`
       )
       // console.log(response)
       // console.log(response[0].products)

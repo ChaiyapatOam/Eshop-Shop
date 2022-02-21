@@ -108,7 +108,7 @@ export default {
         phone: this.phone,
       }
       const res = await axios.put(
-        `http://159.223.71.243/api/v1/users`,
+        `https://ai-ani.me/api/v1/users`,
         body
       )
       console.log(res.data)
