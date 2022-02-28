@@ -11,8 +11,8 @@
         </div> -->
         <div class="float-right">
           <button class="btn btn-outline-dark" @click="cart">
-            <i class="bx bx-cart" style="font-size: 24px;"></i>
-            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+            <i class="bx bx-cart" style="font-size: 24px"></i>
+            <span class="badge bg-dark text-white ms-1 rounded-pill">{{itemCount}}</span>
           </button>
         </div>
       </div>
@@ -55,7 +55,7 @@
               <div class="text-center">
                 <!-- Product name-->
                 <h5 class="fw-bolder">{{ product.name }}</h5>
-                
+
                 <!-- Product price-->
                 <h6>ราคา {{ product.price }} บาท</h6>
               </div>
@@ -79,7 +79,7 @@
 
 <script>
 import Header from '../components/Header.vue'
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 
 export default {
   head() {
@@ -123,11 +123,14 @@ export default {
     },
     cart() {
       this.$router.push('/cart')
-    }
+    },
   },
   computed: {
     ...mapState({
       store: (state) => state.cart.store,
+    }),
+    ...mapGetters({
+      itemCount: 'cart/itemCount',
     }),
   },
   async mounted() {
