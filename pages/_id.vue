@@ -1,7 +1,7 @@
 <template>
   <div>
     <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
       rel="stylesheet"
     />
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -10,10 +10,10 @@
         <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
         </div> -->
         <div class="float-right">
-          
-            <i class="fas fa-shopping-cart" style="font-size: 20px"></i>
+          <button class="btn btn-outline-dark" @click="cart">
+            <i class="bx bx-cart" style="font-size: 26px"></i>
             <span class="badge badge-warning bg-dark text-white ms-1 rounded-pill" id="lblCartCount">{{itemCount}}</span>
-          
+          </button>
         </div>
       </div>
 
@@ -185,10 +185,10 @@ export default {
   background-color: #c67605;
 }
 #lblCartCount {
-    font-size: 11px;
+    font-size: 12px;
     background: #ff0000;
     color: #fff;
-    padding: 1 3px;
+    padding: 3 3px;
     vertical-align: top;
     margin-left: -10px; 
 }
