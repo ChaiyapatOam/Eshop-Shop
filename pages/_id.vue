@@ -10,10 +10,10 @@
         <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
         </div> -->
         <div class="float-right">
-          <button class="btn btn-outline-dark" @click="cart">
+          
             <i class="fas fa-shopping-cart" style="font-size: 20px"></i>
             <span class="badge badge-warning bg-dark text-white ms-1 rounded-pill" id="lblCartCount">{{itemCount}}</span>
-          </button>
+          
         </div>
       </div>
 
