@@ -11,8 +11,8 @@
         </div> -->
         <div class="float-right">
           <button class="btn btn-outline-dark" @click="cart">
-            <i class="bx bx-cart" style="font-size: 24px"></i>
-            <span class="badge bg-dark text-white ms-1 rounded-pill">{{itemCount}}</span>
+            <i class="bx bx-cart" style="font-size: 28px"></i>
+            <span class="badge badge-warning bg-dark text-white ms-1 rounded-pill" id="lblCartCount">{{itemCount}}</span>
           </button>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default {
 .d-flex {
   display: flex !important;
 }
-.badge {
+ .badge {
   display: inline-block;
   padding: 0.35em 0.65em;
   font-size: 0.75em;
@@ -170,5 +170,26 @@ export default {
 .btn .badge {
   position: relative;
   top: -1px;
+} 
+
+/* .badge {
+  padding-left: 9px;
+  padding-right: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+} */
+
+.label-warning[href],
+.badge-warning[href] {
+  background-color: #c67605;
+}
+#lblCartCount {
+    font-size: 12px;
+    background: #ff0000;
+    color: #fff;
+    padding: 2 2px;
+    vertical-align: top;
+    margin-left: -10px; 
 }
 </style>
