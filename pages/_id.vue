@@ -79,6 +79,7 @@
 
 <script>
 import Header from '../components/Header.vue'
+import {StoreAuth } from '../libs/sessionStorage'
 import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 
 export default {
@@ -93,8 +94,8 @@ export default {
       let response = await $axios.$get(
         `https://ai-ani.me/api/v1/store/${param}`
       )
-      // console.log(response)
-      // console.log(response[0].products)
+      console.log(response)
+      console.log(response[0].products)
       return {
         param: param,
         products: response[0].products,
@@ -136,6 +137,7 @@ export default {
   async mounted() {
     await this.clearStore()
     this.saveStore(this.$route.params.id)
+    StoreAuth.setStoreAuth(this.$route.params.id)
   },
 }
 </script>

@@ -29,11 +29,14 @@
           <td>{{ c.product.price }}</td>
           <td>
             <!-- ลบ -->
-            <i class='bx bx-minus'  @click="handleSubtractProduct(c.product.id,c.quantity)"></i>
+            <i
+              class="bx bx-minus"
+              @click="handleSubtractProduct(c.product.id, c.quantity)"
+            ></i>
             <!-- <i class='bx bx-minus' v-else ></i> -->
             {{ c.quantity }}
             <!-- บวก -->
-            <i class='bx bx-plus' @click="handleAddProduct(c.product)"></i>
+            <i class="bx bx-plus" @click="handleAddProduct(c.product)"></i>
           </td>
 
           <td>{{ c.product.price * c.quantity }}</td>
@@ -73,6 +76,8 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
+import { StoreAuth } from '../libs/sessionStorage'
+import axios from 'axios'
 export default {
   name: 'Pages',
   head() {
@@ -81,11 +86,20 @@ export default {
     }
   },
   computed: {
-    ...mapState({ cart: (state) => state.cart.cart }),
+    ...mapState({
+      cart: (state) => state.cart.cart,
+    }),
     ...mapGetters({
       itemCount: 'cart/itemCount',
       totalPrice: 'cart/totalPrice',
     }),
+  },
+  data() {
+    return {
+      store: null,
+      products: '',
+      mycart: '',
+    }
   },
   methods: {
     ...mapMutations({
@@ -97,12 +111,49 @@ export default {
       clearCartData: 'cart/clearCartData',
       saveTotal: 'cart/saveTotal',
     }),
+    async fetchData() {
+      const { data } = await axios.get(
+        `https://ai-ani.me/api/v1/store/${this.store}`,
+        {
+          headers: {
+            'Content-Type': 'Application/JSON',
+            // Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      // console.log(data[0].products)
+      const product = data[0].products
+      let p = product.map((p) => {
+        let name = p.id
+        return name
+      })
+      this.products = p
+
+      const mycart = this.cart
+      let c = mycart.map((c) => {
+        let id = c.product.id
+        return id
+      })
+      this.mycart = c
+
+    },
+    Cart() {
+      const mycart = this.mycart
+      const products = this.products
+
+      for (var i = 0; i < mycart.length; i++) {
+        if (products.indexOf(mycart[i]) === -1) {
+          this.removeProduct(mycart[i])
+        }
+      }
+    },
     handleAddProduct(product) {
       this.addProduct(product)
     },
-    handleSubtractProduct(id,quantity) {
-      if(quantity>1){
-      this.subtractProduct(id)
+    handleSubtractProduct(id, quantity) {
+      if (quantity > 1) {
+        this.subtractProduct(id)
       }
     },
     handleRemoveProduct(id) {
@@ -117,6 +168,13 @@ export default {
     total() {
       this.saveTotal(this.totalPrice)
     },
+  },
+  async mounted() {
+    const storeAuth = StoreAuth.getStoreAuth()
+    this.store = storeAuth
+
+    await this.fetchData()
+    this.Cart()
   },
 }
 </script>
