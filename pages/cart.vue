@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div class="row bg-light py-3">
-      <div class="col text-center">ตะกร้าสินค้า</div>
+      <div class="col text-center">
+        <h4>ตะกร้าสินค้า</h4>
+      </div>
     </div>
     <link
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
@@ -11,7 +13,7 @@
       <thead>
         <tr>
           <th scope="col">สินค้า</th>
-          <th scope="col">ชิ้นละ</th>
+          <th scope="col">ราคา</th>
           <th scope="col">จำนวน</th>
           <th scope="col">รวม</th>
           <th scope="col">ลบ</th>
@@ -19,7 +21,12 @@
       </thead>
       <tbody>
         <tr v-if="itemCount == 0">
-          <td colspan="5" class="text-center">คุณไม่มีของในตะกร้า</td>
+          <td colspan="5" class="text-center">
+            คุณไม่มีของในตะกร้า <br />
+            <button class="btn small btn-success" @click="Back">
+              ย้อนกลับ
+            </button>
+          </td>
         </tr>
         <tr v-for="(c, i) in cart" :key="i">
           <td>
@@ -33,8 +40,9 @@
               class="bx bx-minus"
               @click="handleSubtractProduct(c.product.id, c.quantity)"
             ></i>
-            <!-- <i class='bx bx-minus' v-else ></i> -->
+
             {{ c.quantity }}
+
             <!-- บวก -->
             <i class="bx bx-plus" @click="handleAddProduct(c.product)"></i>
           </td>
@@ -121,7 +129,6 @@ export default {
           },
         }
       )
-
       // console.log(data[0].products)
       const product = data[0].products
       let p = product.map((p) => {
@@ -136,7 +143,6 @@ export default {
         return id
       })
       this.mycart = c
-
     },
     Cart() {
       const mycart = this.mycart
@@ -172,9 +178,13 @@ export default {
   async mounted() {
     const storeAuth = StoreAuth.getStoreAuth()
     this.store = storeAuth
-
-    await this.fetchData()
-    this.Cart()
+    try {
+      await this.fetchData()
+      this.Cart()
+    } catch (err) {
+      console.log(err)
+      this.$router.push('/')
+    }
   },
 }
 </script>

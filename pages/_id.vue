@@ -12,7 +12,12 @@
         <div class="float-right">
           <button class="btn btn-outline-dark" @click="cart">
             <i class="bx bx-cart" style="font-size: 26px"></i>
-            <span class="badge badge-warning bg-dark text-white ms-1 rounded-pill" id="lblCartCount">{{itemCount}}</span>
+            <span
+              v-if="itemCount > 0"
+              class="badge badge-warning bg-dark text-white ms-1 rounded-pill"
+              id="lblCartCount"
+              >{{ itemCount }}</span
+            >
           </button>
         </div>
       </div>
@@ -62,7 +67,7 @@
             </div>
             <!-- Product actions-->
             <div class="text-center" style="margin-bottom: 20px">
-              <button class="btn btn-primary" @click="AddProduct(product)">
+              <button class="btn btn-primary" @click="AddProduct(product,product.image)">
                 เพิ่มลงตะกร้า
               </button>
               <button class="btn btn-success" @click="Buynow(product)">
@@ -79,7 +84,7 @@
 
 <script>
 import Header from '../components/Header.vue'
-import {StoreAuth } from '../libs/sessionStorage'
+import { StoreAuth } from '../libs/sessionStorage'
 import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 
 export default {
@@ -94,8 +99,8 @@ export default {
       let response = await $axios.$get(
         `https://ai-ani.me/api/v1/store/${param}`
       )
-      console.log(response)
-      console.log(response[0].products)
+      // console.log(response)
+      // console.log(response[0].products)
       return {
         param: param,
         products: response[0].products,
@@ -115,15 +120,22 @@ export default {
     ...mapMutations({
       addProduct: 'cart/addProduct',
     }),
-    AddProduct(product) {
+    AddProduct(product,img) {
       this.addProduct(product)
+      this.$swal.fire({
+        imageUrl: img,
+        title: 'เพิ่มสินค้าสำเร็จ',
+        timer: 800,
+        text: ``,
+        showConfirmButton:false
+      })
     },
     Buynow(product) {
       this.addProduct(product)
       this.$router.push('/cart')
     },
     cart() {
-      this.$router.push('/cart')
+      if (this.itemCount > 0) this.$router.push('/cart')
     },
   },
   computed: {
@@ -143,6 +155,9 @@ export default {
 </script>
 
 <style scoped>
+.swal2-wide {
+  width: 350px !important;
+}
 .ratio {
   aspect-ratio: auto 4 / 3;
 
@@ -153,7 +168,7 @@ export default {
 .d-flex {
   display: flex !important;
 }
- .badge {
+.badge {
   display: inline-block;
   padding: 0.35em 0.65em;
   font-size: 0.75em;
@@ -172,7 +187,7 @@ export default {
 .btn .badge {
   position: relative;
   top: -1px;
-} 
+}
 
 /* .badge {
   padding-left: 9px;
@@ -187,11 +202,11 @@ export default {
   background-color: #c67605;
 }
 #lblCartCount {
-    font-size: 12px;
-    background: #ff0000;
-    color: #fff;
-    padding: 3 3px;
-    vertical-align: top;
-    margin-left: -10px; 
+  font-size: 12px;
+  background: #ff0000;
+  color: #fff;
+  padding: 3 3px;
+  vertical-align: top;
+  margin-left: -10px;
 }
 </style>
