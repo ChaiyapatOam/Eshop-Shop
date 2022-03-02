@@ -14,8 +14,7 @@
         <tr>
           <th scope="col">สินค้า</th>
           <th scope="col">ราคา</th>
-          <th scope="col">จำนวน</th>
-          <th scope="col">รวม</th>
+          <!-- <th scope="col">รวม</th> -->
           <th scope="col">ลบ</th>
         </tr>
       </thead>
@@ -30,24 +29,20 @@
         </tr>
         <tr v-for="(c, i) in cart" :key="i">
           <td>
-            <img :src="c.product.image" width="50" height="55" /> &nbsp; &nbsp;
-            {{ c.product.name }}
+            {{ c.product.name }} <br />
+            <div>
+              <img :src="c.product.image" width="50" height="55" /> &nbsp;
+              &nbsp;
+        
+              <i class="bx bx-minus" @click="handleSubtractProduct(c.product.id, c.quantity)"></i>
+
+              {{ c.quantity }}
+
+              <i class="bx bx-plus" @click="handleAddProduct(c.product)"></i>
+            </div>
           </td>
           <td>{{ c.product.price }}</td>
-          <td>
-            <!-- ลบ -->
-            <i
-              class="bx bx-minus"
-              @click="handleSubtractProduct(c.product.id, c.quantity)"
-            ></i>
 
-            {{ c.quantity }}
-
-            <!-- บวก -->
-            <i class="bx bx-plus" @click="handleAddProduct(c.product)"></i>
-          </td>
-
-          <td>{{ c.product.price * c.quantity }}</td>
           <td>
             <button
               class="btn small btn-danger mx-1"

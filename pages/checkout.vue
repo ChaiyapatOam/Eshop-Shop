@@ -27,6 +27,7 @@
             <strong>{{ total }}</strong>
           </li>
         </ul>
+        <hr style="margin-top:50px; margin-bottom:30px;"/>
         <form @submit.prevent="POST">
           <h4
             class="d-flex justify-content-between align-items-center mb-3 text-center"
@@ -145,7 +146,7 @@ export default {
         phone: this.phone,
       }
       const res = await axios.put(`https://ai-ani.me/api/v1/users`, body)
-      console.log(res.data)
+      // console.log(res.data)
       // console.log(this.cart)
       // console.log(this.store);
       if (res.data) {
