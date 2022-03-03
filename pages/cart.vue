@@ -50,7 +50,7 @@
                 ></i>
                 <br />
                 <span style="color: red"
-                  >มีสินค้า {{ c.product.stock }} ชิ้น</span
+                  >เหลือสินค้า {{ c.product.stock }} ชิ้น</span
                 >
               </div>
             </div>
