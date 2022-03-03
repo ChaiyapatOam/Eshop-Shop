@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container noselect">
     <div class="row bg-light py-3">
       <div class="col text-center">
         <h4>ตะกร้าสินค้า</h4>
@@ -9,7 +9,7 @@
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <table class="table table-sm table-hover">
+    <table class="table table-sm table-hover" style="font-size:18px">
       <thead>
         <tr>
           <th scope="col">สินค้า</th>
@@ -29,18 +29,33 @@
         </tr>
         <tr v-for="(c, i) in cart" :key="i">
           <td>
-            {{ c.product.name }} <br />
-            <div>
+            <div class="row" style="font-size:20px">{{ c.product.name }} <br /></div>
+            <div class="row" style="font-size:18px">
               <img :src="c.product.image" width="50" height="55" /> &nbsp;
               &nbsp;
-        
-              <i class="bx bx-minus" @click="handleSubtractProduct(c.product.id, c.quantity)"></i>
 
-              {{ c.quantity }}
+              <div>
+                <i
+                  class="bx bx-minus"
+                  @click="handleSubtractProduct(c.product.id, c.quantity)"
+                ></i>
 
-              <i class="bx bx-plus" @click="handleAddProduct(c.product)"></i>
+                {{ c.quantity }}
+
+                <i
+                  class="bx bx-plus"
+                  @click="
+                    handleAddProduct(c.product, c.quantity, c.product.stock)
+                  "
+                ></i>
+                <br />
+                <span style="color: red"
+                  >มีสินค้า {{ c.product.stock }} ชิ้น</span
+                >
+              </div>
             </div>
           </td>
+
           <td>{{ c.product.price }}</td>
 
           <td>
@@ -102,6 +117,7 @@ export default {
       store: null,
       products: '',
       mycart: '',
+      product_stock: '',
     }
   },
   methods: {
@@ -130,7 +146,8 @@ export default {
         let name = p.id
         return name
       })
-      this.products = p
+      this.products = p //cart check
+      this.product_stock = data[0].products //quantity check
 
       const mycart = this.cart
       let c = mycart.map((c) => {
@@ -140,17 +157,41 @@ export default {
       this.mycart = c
     },
     Cart() {
-      const mycart = this.mycart
+      const mycart = this.cart
       const products = this.products
-
+      // console.log(mycart[0].product.id);
       for (var i = 0; i < mycart.length; i++) {
-        if (products.indexOf(mycart[i]) === -1) {
-          this.removeProduct(mycart[i])
+        if (products.indexOf(mycart[i].product.id) === -1) {
+          this.removeProduct(mycart[i].product.id)
         }
       }
+      // console.log(this.mycart)
     },
-    handleAddProduct(product) {
-      this.addProduct(product)
+    CheckCart() {
+      const mycart = this.cart
+      const products = this.product_stock
+      // console.log(mycart);
+      // console.log(products);
+      // for (var i = 0; i < mycart.length; i++) {
+      //   if (products.indexOf(mycart[i].product.id) === -1) {
+      //     // dup.push(mycart[i].product.id)
+      //   }
+      // }
+      var du = []
+      for (var i = 0; i < mycart.length; i++) {
+        for (var j = 0; j < products.length; j++)
+          if (mycart[i].product._id === products[j]._id) {
+            du.push(products[i])
+          }
+      }
+      console.log(du)
+      this.product_stock = du
+      console.log(this.product_stock)
+    },
+    handleAddProduct(product, quantity, stock) {
+      if (quantity < stock) {
+        this.addProduct(product)
+      }
     },
     handleSubtractProduct(id, quantity) {
       if (quantity > 1) {
@@ -176,10 +217,21 @@ export default {
     try {
       await this.fetchData()
       this.Cart()
+      this.CheckCart()
     } catch (err) {
       console.log(err)
-      this.$router.push('/')
+      this.$router.go(-1)
     }
   },
 }
 </script>
+<style  scoped>
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;         
+}
+</style>

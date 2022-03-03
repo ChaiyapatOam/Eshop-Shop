@@ -181,6 +181,9 @@ export default {
       this.$router.go(-1)
     },
   },
+  mounted() {
+    console.log(this.itemCount);
+  },
 }
 </script>
 <style>

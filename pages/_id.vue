@@ -10,7 +10,7 @@
         <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
         </div> -->
         <div class="float-right">
-          <button class="btn btn-outline-dark" @click="cart">
+          <button class="btn btn-outline-dark" @click="ToCart">
             <i class="bx bx-cart" style="font-size: 26px"></i>
             <span
               v-if="itemCount > 0"
@@ -67,10 +67,18 @@
             </div>
             <!-- Product actions-->
             <div class="text-center" style="margin-bottom: 20px">
-              <button class="btn btn-primary" @click="AddProduct(product,product.image)">
+              <button
+                class="btn btn-primary"
+                @click="
+                  AddProduct(product, product.image, product.stock, product.id)
+                "
+              >
                 เพิ่มลงตะกร้า
               </button>
-              <button class="btn btn-success" @click="Buynow(product)">
+              <button
+                class="btn btn-success"
+                @click="Buynow(product, product.id)"
+              >
                 ซื้อเลย
               </button>
             </div>
@@ -99,7 +107,6 @@ export default {
       let response = await $axios.$get(
         `https://ai-ani.me/api/v1/store/${param}`
       )
-      // console.log(response)
       // console.log(response[0].products)
       return {
         param: param,
@@ -111,7 +118,6 @@ export default {
     Header,
   },
   methods: {
-    // ...mapActions({ initializeCart: "cart/initializeCart"}),
     ...mapActions({
       clearCartData: 'cart/clearCartData',
       clearStore: 'cart/clearStore',
@@ -119,27 +125,46 @@ export default {
     }),
     ...mapMutations({
       addProduct: 'cart/addProduct',
+      subtractProduct: 'cart/subtractProduct',
+      removeProduct: 'cart/removeProduct',
     }),
-    AddProduct(product,img) {
-      this.addProduct(product)
-      this.$swal.fire({
-        imageUrl: img,
-        title: 'เพิ่มสินค้าสำเร็จ',
-        timer: 800,
-        text: ``,
-        showConfirmButton:false
-      })
+    AddProduct(products, img, stock, id) {
+      // console.log(this.cart)
+      this.addProduct(products)
+      const p = this.cart.find((cart) => cart.product.id == products.id)
+      if (p.quantity <= stock) {
+        console.log(p)
+        // this.subtractProduct(id)
+        this.$swal.fire({
+          imageUrl: img,
+          title: 'เพิ่มสินค้าสำเร็จ',
+          timer: 800,
+          text: ``,
+          showConfirmButton: false,
+        })
+      } else {
+        this.subtractProduct(id)
+        this.$swal.fire({
+          type: "error",
+          title: `เพิ่มสินค้าได้ไม่เกิน ${stock} ชิ้น`,
+          timer: 800,
+          text: ``,
+          showConfirmButton: false,
+        })
+      }
     },
-    Buynow(product) {
+    Buynow(product, id) {
+      this.removeProduct(id)
       this.addProduct(product)
       this.$router.push('/cart')
     },
-    cart() {
+    ToCart() {
       if (this.itemCount > 0) this.$router.push('/cart')
     },
   },
   computed: {
     ...mapState({
+      cart: (state) => state.cart.cart,
       store: (state) => state.cart.store,
     }),
     ...mapGetters({
