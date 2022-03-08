@@ -98,7 +98,8 @@ import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 export default {
   head() {
     return {
-      title: this.store,
+      // title: this.store,
+      title: "ร้านค้า",
     }
   },
   async asyncData({ $axios, params }) {

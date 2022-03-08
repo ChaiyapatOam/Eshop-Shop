@@ -170,10 +170,11 @@ export default {
         cart: JSON.stringify(this.cart),
         total: this.total,
       }
-      // console.log(body)
+      console.log(body)
       const res = await axios.post(`https://ai-ani.me/api/v1/orders`, body)
+      console.log(res);
       if (res.status == 200) {
-        this.clearCartData()
+        // this.clearCartData()
         this.$router.push('/purchase')
       }
     },
@@ -182,7 +183,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.itemCount);
+
   },
 }
 </script>
