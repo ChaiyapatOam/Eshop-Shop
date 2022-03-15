@@ -13,7 +13,7 @@
       <thead>
         <tr>
           <th scope="col">สินค้า</th>
-          <th scope="col">ราคา</th>
+          <th scope="col">ราคาต่อชิ้น</th>
           <!-- <th scope="col">รวม</th> -->
           <th scope="col">ลบ</th>
         </tr>
