@@ -105,7 +105,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 import axios from 'axios'
-import { log } from 'console'
+import { sessionToken } from '../libs/sessionStorage'
 export default {
   head() {
     return {
@@ -142,6 +142,29 @@ export default {
       storeOrder: 'orders/storeOrderAction',
       clearCartData: 'cart/clearCartData',
     }),
+    Hello() {
+      console.log('Hello World')
+    },
+    async test() {
+      var data =
+        '{\r\n      "applicationKey" : "l72c003a1a84454b0886dd105590474cf5",\r\n      "applicationSecret" : "87c0b6617207447a80111ba33958fd5a"\r\n}'
+
+      var config = {
+        method: 'post',
+        url: 'https://api-sandbox.partners.scb/partners/sandbox/v1/oauth/token',
+        headers: {
+          'Content-Type': 'application/json ',
+          'accept-language': 'EN',
+          requestUId: '85230887-e643-4fa4-84b2-4e56709c4ac4',
+          resourceOwnerId: 'l72c003a1a84454b0886dd105590474cf5',
+        },
+        data: data,
+      }
+      const res = await axios.post(config.url, config.data, {
+        headers: config.headers,
+      })
+      console.log(res)
+    },
     async Submit() {
       const body = {
         phone: this.phone,
@@ -163,39 +186,65 @@ export default {
       if (this.$v.$invalid) {
         return
       }
-      const acctoken = await axios.post(
+      const {data} = await axios.post(
         'https://api-sandbox.partners.scb/partners/sandbox/v1/oauth/token',
+         {
+             applicationKey: 'l72c003a1a84454b0886dd105590474cf5',
+             applicationSecret: '87c0b6617207447a80111ba33958fd5a',
+           },
         {
           headers: {
             'Content-Type': 'application/json ',
             'accept-language': 'EN',
             requestUId: '85230887-e643-4fa4-84b2-4e56709c4ac4',
             resourceOwnerId: 'l72c003a1a84454b0886dd105590474cf5',
-            Cookie:
-              'TS01e7ba6b=01e76b033c79f9f36e39be3e2871522cd9026f412727e2a9e7ff13dce176ab017b4d5664b88c7208e67176189312509b5ed37bcde2',
           },
-          body: {
-            applicationKey: 'l72c003a1a84454b0886dd105590474cf5',
-            applicationSecret: '87c0b6617207447a80111ba33958fd5a',
-          },
-        }
+        },
       )
-      console.log(acctoken.data.accessToken)
-      const body = {
-        store: this.store,
-        name: this.name,
-        phone: this.phone,
-        address: this.address,
-        cart: JSON.stringify(this.cart),
-        total: this.total,
-      }
+      console.log(data.data.accessToken)
+      const token = data.data.accessToken
+      const amount = this.total
+      sessionToken.setToken(data.data.accessToken)
+      // const res = await axios.get('https://ai-ani.me')
+      // console.log(res);
+      
+      // const res = await axios.post(
+      //   'https://api-sandbox.partners.scb/partners/sandbox/v1/payment/qrcode/create',
+      //   {
+      //     qrType: 'PP',
+      //     ppType: 'BILLERID',
+      //     ppId: '875147368312544',
+      //     amount: `${amount}`,
+      //     ref1: 'REFERENCE1',
+      //     ref2: 'REFERENCE2',
+      //     ref3: 'OQZ',
+      //   },
+      //   {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       'accept-language': 'EN',
+      //       authorization: `Bearer ${token}`,
+      //       requestUId: '1b01dff2-b3a3-4567-adde-cd9ddjhjhjhj73c8b6d',
+      //       resourceOwnerId: 'l72c003nmnnna1a84454b0886dd105590474cf5',
+      //     },
+      //   }
+      // )
+      // console.log(res)  
+      // const body = {
+      //   store: this.store,
+      //   name: this.name,
+      //   phone: this.phone,
+      //   address: this.address,
+      //   cart: JSON.stringify(this.cart),
+      //   total: this.total,
+      // }
       // console.log(body)
-      const res = await axios.post(`https://ai-ani.me/api/v1/orders`, body)
-      console.log(res)
-      if (res.status == 200) {
-        // this.clearCartData()
-        this.$router.push('/purchase')
-      }
+      // const res = await axios.post(`https://ai-ani.me/api/v1/orders`, body)
+      // console.log(res)
+      // if (res.status == 200) {
+      //   // this.clearCartData()
+      //   this.$router.push('/purchase')
+      // }
     },
     Back() {
       this.$router.go(-1)
