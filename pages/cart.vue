@@ -184,9 +184,9 @@ export default {
             du.push(products[i])
           }
       }
-      console.log(du)
+      // console.log(du)
       this.product_stock = du
-      console.log(this.product_stock)
+      // console.log(this.product_stock)
     },
     handleAddProduct(product, quantity, stock) {
       if (quantity < stock) {

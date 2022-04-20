@@ -47,6 +47,7 @@ export default {
     'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     'nuxt-sweetalert2',
   ],
 
@@ -54,6 +55,10 @@ export default {
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
     baseURL: '/',
+    proxy : true
+  },
+  proxy: {
+    '/api/v1': { target: 'https://api-sandbox.partners.scb/partners/sandbox/v1/', pathRewrite: {'^/api/v1': ''}, changeOrigin: true }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

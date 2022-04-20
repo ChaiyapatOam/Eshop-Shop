@@ -25,3 +25,22 @@ export class sessionToken {
     sessionStorage.removeItem('token')
   }
 }
+export class BillRef {
+  static getBillRef() {
+    return JSON.parse(sessionStorage.getItem('BillRef'))
+  }
+  static getBillRef2() {
+    return JSON.parse(sessionStorage.getItem('BillRef2'))
+  }
+
+  static setBillRef(value) {
+    sessionStorage.setItem('BillRef', JSON.stringify(value))
+  }
+  static setBillRef2(value) {
+    sessionStorage.setItem('BillRef2', JSON.stringify(value))
+  }
+
+  static clearBillRef() {
+    sessionStorage.removeItem('BillRef')
+  }
+}

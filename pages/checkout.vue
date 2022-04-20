@@ -105,7 +105,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 import axios from 'axios'
-import { sessionToken } from '../libs/sessionStorage'
+import { sessionToken,BillRef } from '../libs/sessionStorage'
 export default {
   head() {
     return {
@@ -142,9 +142,6 @@ export default {
       storeOrder: 'orders/storeOrderAction',
       clearCartData: 'cart/clearCartData',
     }),
-    Hello() {
-      console.log('Hello World')
-    },
     async test() {
       var data =
         '{\r\n      "applicationKey" : "l72c003a1a84454b0886dd105590474cf5",\r\n      "applicationSecret" : "87c0b6617207447a80111ba33958fd5a"\r\n}'
@@ -201,35 +198,44 @@ export default {
           },
         },
       )
-      console.log(data.data.accessToken)
+      // console.log(data.data.accessToken)
+
       const token = data.data.accessToken
+      const ref1 =  this.phone
+      const ref2 = Date.now()
       const amount = this.total
-      sessionToken.setToken(data.data.accessToken)
-      // const res = await axios.get('https://ai-ani.me')
-      // console.log(res);
-      
-      // const res = await axios.post(
-      //   'https://api-sandbox.partners.scb/partners/sandbox/v1/payment/qrcode/create',
-      //   {
-      //     qrType: 'PP',
-      //     ppType: 'BILLERID',
-      //     ppId: '875147368312544',
-      //     amount: `${amount}`,
-      //     ref1: 'REFERENCE1',
-      //     ref2: 'REFERENCE2',
-      //     ref3: 'OQZ',
-      //   },
-      //   {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       'accept-language': 'EN',
-      //       authorization: `Bearer ${token}`,
-      //       requestUId: '1b01dff2-b3a3-4567-adde-cd9ddjhjhjhj73c8b6d',
-      //       resourceOwnerId: 'l72c003nmnnna1a84454b0886dd105590474cf5',
-      //     },
-      //   }
-      // )
-      // console.log(res)  
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods':
+            'GET, POST, PATCH, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
+          'accept-language': 'EN',
+          authorization: `Bearer ${token}`,
+          requestUId: '1b01dff2-b3a3-4567-adde-cd9ddjhjhjhj73c8b6d',
+          resourceOwnerId: 'l72c003nmnnna1a84454b0886dd105590474cf5',
+        },
+      }
+      var bodyqr = {
+        qrType: 'PP',
+        ppType: 'BILLERID',
+        ppId: '875147368312544',
+        amount: `${amount}`,
+        ref1: `${ref1}`,
+        ref2: `${ref2}`,
+        ref3: 'SCB',
+      }
+      const qrcode = await axios.post(
+        'api/v1/payment/qrcode/create',
+        bodyqr,
+        config
+      )
+      // console.log(qrcode.data.data.qrImage)
+      sessionToken.setToken(qrcode.data.data.qrImage) //set image token
+      BillRef.setBillRef(ref1)
+      BillRef.setBillRef2(ref2)
+      this.$router.push('/purchase')
       // const body = {
       //   store: this.store,
       //   name: this.name,
