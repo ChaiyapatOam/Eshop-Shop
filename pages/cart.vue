@@ -132,7 +132,7 @@ export default {
     }),
     async fetchData() {
       const { data } = await axios.get(
-        `https://ai-ani.me/api/v1/store/${this.store}`,
+        `https://api.unforgettravel.com/api/v1/store/${this.store}`,
         {
           headers: {
             'Content-Type': 'Application/JSON',

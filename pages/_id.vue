@@ -94,27 +94,36 @@
 import Header from '../components/Header.vue'
 import { StoreAuth } from '../libs/sessionStorage'
 import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
+import axios from 'axios'
 
 export default {
   head() {
     return {
-      // title: this.store,
-      title: "ร้านค้า",
+      title: this.store,
+      title: 'ร้านค้า',
     }
   },
-  async asyncData({ $axios, params }) {
-    const param = params.id
-    try {
-      let response = await $axios.$get(
-        `https://ai-ani.me/api/v1/store/${param}`
-      )
-      // console.log(response[0].products)
-      return {
-        param: param,
-        products: response[0].products,
-      }
-    } catch (err) {}
+  data() {
+    return {
+      products: null,
+    }
   },
+  // async asyncData({ $axios, params }) {
+  //   const param = params.id
+  //   console.log(param)
+  //   try {
+  //     let response = await $axios.$get(
+  //       `https://api.unforgettravel.com/api/v1/store/${param}`
+  //     )
+  //     // console.log(response)
+  //     // console.log(response[0].products)
+  //     return {
+  //       // products: response[0].products,
+  //     }
+  //   } catch (err) {
+  //     console.log("Some Err");
+  //   }
+  // },
   component: {
     Header,
   },
@@ -129,6 +138,19 @@ export default {
       subtractProduct: 'cart/subtractProduct',
       removeProduct: 'cart/removeProduct',
     }),
+    async FetchData() {
+      const param = this.$route.params.id
+      console.log(param)
+      try {
+        let response = await axios.get(
+          `https://api.unforgettravel.com/api/v1/store/${param}`
+        )
+        console.log(response.data[0].products)
+        // console.log(response[0].products)
+
+        this.products= response.data[0].products
+      } catch (err) {}
+    },
     AddProduct(products, img, stock, id) {
       // console.log(this.cart)
       this.addProduct(products)
@@ -146,7 +168,7 @@ export default {
       } else {
         this.subtractProduct(id)
         this.$swal.fire({
-          type: "error",
+          type: 'error',
           title: `เพิ่มสินค้าได้ไม่เกิน ${stock} ชิ้น`,
           timer: 800,
           text: ``,
@@ -174,6 +196,7 @@ export default {
   },
   async mounted() {
     await this.clearStore()
+    this.FetchData()
     this.saveStore(this.$route.params.id)
     StoreAuth.setStoreAuth(this.$route.params.id)
   },

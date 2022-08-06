@@ -105,7 +105,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 import axios from 'axios'
-import { sessionToken,BillRef } from '../libs/sessionStorage'
+import { sessionToken, BillRef } from '../libs/sessionStorage'
 export default {
   head() {
     return {
@@ -166,7 +166,10 @@ export default {
       const body = {
         phone: this.phone,
       }
-      const res = await axios.put(`https://ai-ani.me/api/v1/users`, body)
+      const res = await axios.put(
+        `https://api.unforgettravel.com/api/v1/users`,
+        body
+      )
       // console.log(res.data)
       // console.log(this.cart)
       // console.log(this.store);
@@ -183,12 +186,12 @@ export default {
       if (this.$v.$invalid) {
         return
       }
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         'https://api-sandbox.partners.scb/partners/sandbox/v1/oauth/token',
-         {
-             applicationKey: 'l72c003a1a84454b0886dd105590474cf5',
-             applicationSecret: '87c0b6617207447a80111ba33958fd5a',
-           },
+        {
+          applicationKey: 'l72c003a1a84454b0886dd105590474cf5',
+          applicationSecret: '87c0b6617207447a80111ba33958fd5a',
+        },
         {
           headers: {
             'Content-Type': 'application/json ',
@@ -196,12 +199,12 @@ export default {
             requestUId: '85230887-e643-4fa4-84b2-4e56709c4ac4',
             resourceOwnerId: 'l72c003a1a84454b0886dd105590474cf5',
           },
-        },
+        }
       )
       // console.log(data.data.accessToken)
 
       const token = data.data.accessToken
-      const ref1 =  this.phone
+      const ref1 = this.phone
       const ref2 = Date.now()
       const amount = this.total
       const config = {
@@ -226,13 +229,16 @@ export default {
         ref2: `${ref2}`,
         ref3: 'SCB',
       }
+      console.log(bodyqr)
       const qrcode = await axios.post(
-        'api/v1/payment/qrcode/create',
+        '/api/v1/payment/qrcode/create',
+        // "https://api-sandbox.partners.scb/partners/sandbox/v1/payment/qrcode/create",
         bodyqr,
         config
       )
+      console.log(qrcode)
       // console.log(qrcode.data.data.qrImage)
-      sessionToken.setToken(qrcode.data.data.qrImage) //set image token
+      // sessionToken.setToken(qrcode.data.data.qrImage) //set image token
       BillRef.setBillRef(ref1)
       BillRef.setBillRef2(ref2)
       this.$router.push('/purchase')
